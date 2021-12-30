@@ -24,7 +24,7 @@ from .evaluation import FilterEvaluation, SmootherEvaluation, BayesianUpdateEval
     parameter_transform, bandwidth_factor, window_bandwidth_factor, dimension_bandwidth_factor, parameter_arrays, \
     exception_catcher, tile_bandwidth
 
-from .kernels import ExponentialQuadraticKernel, LinearBandwidthKernel, linear_kernel
+from .kernels import ExponentialQuadraticKernel, LinearBandwidthKernel, linear_kernel, RationalQuadraticKernel
 
 from .preprocessors import generate_data_windows, compute_median_bandwidth, add_noise, select_reference_set_randomly,\
     select_reference_set_by_kernel_activation, cut_at_impact
@@ -52,6 +52,7 @@ __all__ = ['KernelKalmanFilter',
            'ExponentialQuadraticKernel',
            'LinearBandwidthKernel',
            'linear_kernel',
+           'RationalQuadraticKernel',
            'generate_data_windows',
            'compute_median_bandwidth',
            'add_noise',

@@ -141,6 +141,7 @@ class ExponentialQuadraticKernel(OldExponentialQuadraticKernel):
             bandwidth = self.bandwidth
 
         self.maha_dist.set_bandwidth(bandwidth)
+
         sqdist = self.maha_dist.get_distance_matrix(a, b)
 
         K = np.exp(-sqdist)
@@ -149,3 +150,33 @@ class ExponentialQuadraticKernel(OldExponentialQuadraticKernel):
             K = K / np.sqrt(np.prod(self.bandwidth) ** 2 * (2 * np.pi) ** a.shape[1])
 
         return K
+    
+class RationalQuadraticKernel(Kernel):
+    def __init__(self, bandwidth=1., normalized=False):
+        self.maha_dist = MahaDist()
+        self.normalized = normalized
+        self.bandwidth = bandwidth
+        
+    def get_gram_matrix(self, a: np.ndarray, b: np.ndarray = None) -> np.ndarray:
+        if len(a.shape) == 1:
+            a = a.reshape((1, -1))
+        
+        if np.isscalar(self.bandwidth):
+            bandwidth = np.ones(a.shape[1]) * self.bandwidth
+        else:
+            bandwidth = self.bandwidth
+            
+        self.maha_dist.set_bandwidth(bandwidth)
+        
+        sqdist = self.maha_dist.get_distance_matrix(a, b)
+        
+        alpha = 1.0
+        K = (1.0 + sqdist / alpha) ** (-alpha)
+        
+        if self.normalized:
+            K = K / np.sqrt(np.prod(self.bandwidth) ** 2 * (2 * np.pi) ** a.shape[1])
+        
+        return K
+    
+    def __call__(self, a: np.ndarray, b: np.ndarray = None) -> np.ndarray:
+        return self.get_gram_matrix(a, b)

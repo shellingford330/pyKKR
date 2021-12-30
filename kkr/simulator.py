@@ -28,7 +28,6 @@ class Simulator:
             self.initial_state_generator = uniform(loc=0, scale=1)
         else:
             self.initial_state_generator = initial_state_generator
-
         self._episode_counter = 0
 
     def simulate(self, num_episodes, num_steps, reset_episode_counter=True) -> pd.DataFrame:
@@ -49,9 +48,10 @@ class Simulator:
             columns=self.environment.stateNames,
             index=index
         )
-
+        
         # sample initial data
-        df.loc[(slice(None), 0), :] = self.initial_state_generator((num_episodes, self.environment.stateDim))
+#         df.loc[(slice(None), 0), :] = self.initial_state_generator((num_episodes, self.environment.stateDim))
+        df.loc[(slice(None), 0), :] = uniform.rvs(loc=0, scale=.01, size=(num_episodes, self.environment.stateDim))
 
         for t in range(1, num_steps):
             state = df.loc[(slice(None), t-1), :].values

@@ -5,6 +5,8 @@ cimport cython
 import numpy as np
 cimport numpy as np
 
+cimport _mahalanobis_distance
+
 DTYPE = np.float64
 
 
@@ -23,7 +25,7 @@ cdef class MahaDist:
     @cython.boundscheck(False)
     @cython.wraparound(False)
     @cython.nonecheck(False)
-    cdef double[:, :] get_distance_matrix_c(self, double[:, :] a, double[:, :] b=None):
+    cpdef double[:, :] get_distance_matrix_c(self, double[:, :] a, double[:, :] b=None):
         """computes the squared mahalanobis distance
         
         :param a: q x d matrix of kilobot positions
@@ -33,13 +35,13 @@ cdef class MahaDist:
         """
         # assert a.dtype == DTYPE
 
-        cdef Py_ssize_t q, r, d
-        cdef Py_ssize_t i, j, k
+#         cdef Py_ssize_t q, r, d
+#         cdef Py_ssize_t i, j, k
 
         q = a.shape[0]
         d = a.shape[1]
 
-        cdef double[:, :] maha_dist
+#         cdef double[:, :] maha_dist
         if b is None:
             maha_dist = np.empty((q, q))
         else:
@@ -47,7 +49,7 @@ cdef class MahaDist:
             r = b.shape[0]
             maha_dist = np.empty((q, r))
 
-        cdef double[:] bw
+#         cdef double[:] bw
         if np.isscalar(self.bandwidth):
             bw = np.ones(a.shape[1]) / (2 * self.bandwidth)
         else:
@@ -55,10 +57,11 @@ cdef class MahaDist:
 
         # assert d == len(bw)
 
-        cdef double sq_dist_a = .0, sq_dist_ab = .0
-        with nogil, parallel():
+#         cdef double sq_dist_a = .0, sq_dist_ab = .0
+#         with nogil, parallel():
             if b is None:
-                for i in prange(q, schedule='guided'):
+#                 for i in prange(q, schedule='guided'):
+                for i in range(q):
                     for j in range(i, q):
                         maha_dist[i, j] = .0
                         maha_dist[j, i] = .0
@@ -70,7 +73,8 @@ cdef class MahaDist:
                         if j != i:
                             maha_dist[j, i] += sq_dist_a
             else:
-                for i in prange(q, schedule='guided'):
+#                 for i in prange(q, schedule='guided'):
+                for i in range(q):
                     for j in range(r):
                         maha_dist[i, j] = .0
                         for k in range(d):
