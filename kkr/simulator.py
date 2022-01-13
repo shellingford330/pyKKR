@@ -17,7 +17,7 @@
 
 import numpy as np
 import pandas as pd
-from scipy.stats import uniform
+from scipy.stats import uniform, norm
 
 
 class Simulator:
@@ -50,8 +50,8 @@ class Simulator:
         )
         
         # sample initial data
-#         df.loc[(slice(None), 0), :] = self.initial_state_generator((num_episodes, self.environment.stateDim))
-        df.loc[(slice(None), 0), :] = uniform.rvs(loc=0, scale=0.01, size=(num_episodes, self.environment.stateDim))
+        df.loc[(slice(None), 0), :] = self.initial_state_generator.rvs(size=(num_episodes, self.environment.stateDim))
+#         df.loc[(slice(None), 0), :] = uniform.rvs(loc=0, scale=.01, size=(num_episodes, self.environment.stateDim))
 
         for t in range(1, num_steps):
             state = df.loc[(slice(None), t-1), :].values

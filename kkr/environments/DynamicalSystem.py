@@ -18,6 +18,7 @@ class DynamicalSystem():
 
     def getControlNoise(self, states, actions):
         std = self.getControlNoiseStd(states, actions)
+#         from IPython.core.debugger import Pdb; Pdb().set_trace()
         return np.random.normal(loc=0.0, scale=std, size=np.shape(actions))
 
     def getControlNoiseStd(self, states, actions):
