@@ -31,6 +31,8 @@ from .preprocessors import generate_data_windows, compute_median_bandwidth, add_
 
 from .simulator import Simulator
 
+from .parallel import conduct
+
 __all__ = ['KernelKalmanFilter',
            'SubspaceKernelKalmanFilter',
            'KernelForwardBackwardSmoother',
@@ -59,4 +61,5 @@ __all__ = ['KernelKalmanFilter',
            'select_reference_set_randomly',
            'select_reference_set_by_kernel_activation',
            'cut_at_impact',
-           'Simulator']
+           'Simulator',
+           'conduct']
