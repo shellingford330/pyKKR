@@ -492,6 +492,9 @@ class KernelBayesFilter:
         self._m_0 = None
 
         self._model_learned = False
+        
+        # default: KBR(c)
+        self.method = "c"
 
     def learn_model(self, bandwidth_k=None, bandwidth_g=None, alpha_t=None, alpha_o1=None, alpha_o2=None):
         # update model parameters
@@ -588,11 +591,22 @@ class KernelBayesFilter:
     def observation_update(self, m, y):
         # embed observation
         g_y = self._k_g(y)
-
-        _D = np.diag(self._C.dot(m).flat)
-        _DG = _D.dot(self._G)
-        m = np.linalg.solve(_DG + self.alpha_o2 * np.eye(self.num_states), _D).dot(g_y)
-
+        
+        # perform Bayes update according to KBR(a), KBR(b), KBR(c)
+        if self.method == "a":
+            _L = self._C.dot(np.diag(m.flat))
+            _D = np.diag(self._C.dot(m).flat)
+            _DG = _D.dot(self._G)
+            m = _L.T.dot(np.linalg.solve(_DG.dot(_DG) + self.alpha_o2 * np.eye(self.num_states), self._G)).dot(_D).dot(g_y)
+        if self.method == "b":
+            _D = np.diag(self._C.dot(m).flat)
+            _DG = _D.dot(self._G)
+            m = _DG.dot(np.linalg.solve(_DG.dot(_DG) + self.alpha_o2 * np.eye(self.num_states), _D)).dot(g_y)
+        if self.method == "c":
+            _D = np.diag(self._C.dot(m).flat)
+            _DG = _D.dot(self._G)
+            m = np.linalg.solve(_DG + self.alpha_o2 * np.eye(self.num_states), _D).dot(g_y)
+            
         # m = m / m.sum(axis=0)
 
         return m
