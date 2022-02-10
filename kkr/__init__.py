@@ -33,6 +33,8 @@ from .simulator import Simulator
 
 from .parallel import conduct
 
+from .filter_tuning import tuning_kernel_kalman_filter
+
 __all__ = ['KernelKalmanFilter',
            'SubspaceKernelKalmanFilter',
            'KernelForwardBackwardSmoother',
@@ -62,4 +64,5 @@ __all__ = ['KernelKalmanFilter',
            'select_reference_set_by_kernel_activation',
            'cut_at_impact',
            'Simulator',
-           'conduct']
+           'conduct',
+           'tuning_kernel_kalman_filter']
