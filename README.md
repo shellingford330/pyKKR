@@ -19,7 +19,6 @@ Kernel Kalman rule (KKR) のプログラム（Python）と[Kernel Kalman ruleの
 ```
 .
 ├── kkr
-│   ├── __init__.py
 │   ├── environments ・・・ シミュレートする環境
 │   │   └──  Pendulum.py ・・・ 振り子の状態モデル
 │   ├── kernels ・・・ カーネルに関するライブラリ
